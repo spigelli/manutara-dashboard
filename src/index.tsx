@@ -1,30 +1,30 @@
-import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import env from 'react-dotenv';
 import {
   ApolloClient,
   ApolloProvider,
-  InMemoryCache,
 } from '@apollo/client';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { StrictMode } from 'react';
+import { App } from './components';
+import { cache } from './cache';
+// import reportWebVitals from './reportWebVitals';
 
 const client = new ApolloClient({
-  cache: new InMemoryCache(),
+  cache,
   uri: env.GQL_API_URL,
 });
 
 ReactDOM.render(
-  <React.StrictMode>
+  <StrictMode>
     <ApolloProvider client={client}>
       <App />
     </ApolloProvider>
-  </React.StrictMode>,
+  </StrictMode>,
   document.getElementById('root'),
 );
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+// reportWebVitals();
