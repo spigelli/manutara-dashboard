@@ -10,11 +10,26 @@ export interface Schema {
 export const schemaQuery = gql`
   query GetSchema {
     __schema {
-      types {
-        kind
-        name
-        possibleTypes {
+      queryType {
+        fields {
           name
+          description
+          args {
+            name
+            description
+            type {
+              kind
+              name
+              inputFields {
+                name
+              }
+              ofType {
+                kind
+                name
+              }
+            }
+            defaultValue
+          }
         }
       }
     }

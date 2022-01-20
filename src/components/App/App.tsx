@@ -1,5 +1,4 @@
 import { useQuery } from '@apollo/client';
-import './App.css';
 import { schemaStatus } from '../../cache/cache';
 import { schemaQuery } from '../../schema/schema';
 
@@ -11,7 +10,9 @@ export function App() {
   console.log('data', data);
   return (
     <div className="App">
-      app
+      {loading ? 'loading' : 'loaded'}
+      {error ? 'error' : 'no error'}
+      {JSON.stringify(data) || 'no data'}
     </div>
   );
 }

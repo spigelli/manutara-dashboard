@@ -1,5 +1,4 @@
 import ReactDOM from 'react-dom';
-import './index.css';
 import env from 'react-dotenv';
 import {
   ApolloClient,

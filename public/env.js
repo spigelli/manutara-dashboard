@@ -3,7 +3,7 @@ window.env = {
   "TERM_PROGRAM": "vscode",
   "NODE": "/Users/isaacspiegel/.nvm/versions/node/v16.13.0/bin/node",
   "INIT_CWD": "/Users/isaacspiegel/Documents/Repositories/manutara-dashboard",
-  "_P9K_TTY": "/dev/ttys000",
+  "_P9K_TTY": "/dev/ttys004",
   "NVM_CD_FLAGS": "-q",
   "TERM": "xterm-256color",
   "SHELL": "/bin/zsh",
