@@ -10,6 +10,7 @@ export interface Schema {
 export const schemaQuery = gql`
   query GetSchema {
     __schema {
+      status @client
       queryType {
         fields {
           name

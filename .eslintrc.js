@@ -14,6 +14,7 @@ module.exports = {
     'airbnb/hooks',
     'airbnb-typescript',
     'plugin:react/jsx-runtime',
+    'plugin:prettier/recommended'
   ],
   rules: {
     'jsx-a11y/anchor-is-valid': 'warn',
@@ -23,6 +24,14 @@ module.exports = {
       'always-multiline',
     ],
     'func-names': 'off',
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": true,
+        "parser": "typescript"
+      }
+    ],
+    "max-len": "off",
   },
   overrides: [
     {
@@ -40,6 +49,17 @@ module.exports = {
         'jsx-a11y/click-events-have-key-events': 'off',
         'no-useless-escape': 'off',
         'react/no-unused-prop-types': 'off',
+        'comma-dangle': ["error", "never"],
+        "@typescript-eslint/comma-dangle": ["error", "only-multiline"],
+
+      },
+    },
+    {
+      files: [
+        'src/types/*.ts',
+      ],
+      rules: {
+        '@typescript-eslint/naming-convention': 'off',
       },
     },
     {

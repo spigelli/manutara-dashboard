@@ -1,18 +1,54 @@
 import { useQuery } from '@apollo/client';
-import { schemaStatus } from '../../cache/cache';
-import { schemaQuery } from '../../schema/schema';
+import { BaseStyles, Box, Spinner, useTheme } from '@primer/react';
+import { QUERY_INFO } from '../../graphql/queries/queryInfo';
+import { HeaderNav } from '../HeaderNav/HeaderNav';
+import MenuPane from '../MenuPane/MenuPane';
+import { PageNav } from '../PageNav/PageNav';
+import { Table } from '../Table/Table';
+import TableHeader from '../TableHeader/TableHeader';
 
 export function App() {
-  const { loading, error, data } = useQuery(schemaQuery);
-  schemaStatus({ loading, error, data });
-  console.log('loading', loading);
-  console.log('error', error);
-  console.log('data', data);
+  const { loading, error } = useQuery(QUERY_INFO);
+  if (error) {
+    console.log(error);
+  }
+
+  const { theme } = useTheme();
   return (
-    <div className="App">
-      {loading ? 'loading' : 'loaded'}
-      {error ? 'error' : 'no error'}
-      {JSON.stringify(data) || 'no data'}
-    </div>
+    <Box height="100% !important" backgroundColor="canvas.inset">
+      <BaseStyles className="full-height">
+        <HeaderNav />
+        <TableHeader />
+        {loading ? (
+          <Spinner />
+        ) : (
+          <>
+            <PageNav />
+            <Box
+              sx={{
+                display: 'flex',
+                flexWrap: 'nowrap',
+                height: '100%'
+              }}
+            >
+              <Box
+                sx={{
+                  backgroundColor: `${theme?.colors.canvas.default}`,
+                  width: '100%'
+                }}
+              >
+                <Table />
+              </Box>
+              <MenuPane
+                sx={{
+                  float: 'right',
+                  width: '360px'
+                }}
+              />
+            </Box>
+          </>
+        )}
+      </BaseStyles>
+    </Box>
   );
 }

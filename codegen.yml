@@ -1,0 +1,20 @@
+generates:
+  ./src/types/manutara.ts:
+    schema: http://localhost:4000/graphql
+    documents: 'src/components/**/*.graphql'
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+  ./src/types/introspection.ts:
+    schema: 'graphql/introspection.graphql'
+    plugins:
+      - typescript
+  ./src/types/client.ts:
+    schema: 'graphql/client.graphql'
+    plugins:
+      - typescript
+      - typescript-operations
+hooks:
+  afterOneFileWrite:
+    - npm run eslint --fix
