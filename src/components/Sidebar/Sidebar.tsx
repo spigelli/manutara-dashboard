@@ -7,15 +7,33 @@ import { ThreeBarsIcon, XIcon } from '@primer/octicons-react';
 import { getSidebarStyles, getSidebarHeaderStyles } from './styles';
 
 export type SidebarProps = {
-  children?: ReactElement | ReactElement[];
+  title: string;
+  // Children are SidebarItem
+  children?: ReactElement<SidebarItemProps>[];
 } & InputHTMLAttributes<HTMLInputElement> &
   SxProp;
+
+export type SidebarItemProps = {
+  title: string;
+  href: string;
+  selected?: boolean;
+};
+
+export function SidebarItem({ title, href, selected }: SidebarItemProps) {
+  return (
+    <SideNav.Link href={href} selected={selected}>
+      <Text>{title}</Text>
+    </SideNav.Link>
+  );
+}
+
+SidebarItem.displayName = 'SidebarItem';
 
 /**
  * An accessible, menu pane component
  */
 // eslint-disable-next-line no-empty-pattern
-function Sidebar({ sx: sxProp = {} }: SidebarProps) {
+function Sidebar({ title, children, sx: sxProp = {} }: SidebarProps) {
   const { theme } = useTheme();
   const sxStyles = merge.all([getSidebarStyles(theme), sxProp as SxProp]);
 
@@ -37,7 +55,7 @@ function Sidebar({ sx: sxProp = {} }: SidebarProps) {
             as="h3"
           >
             <ThreeBarsIcon size={16} />
-            {' Types'}
+            {` ${title}`}
           </Heading>
         </Header.Item>
         <Header.Item
@@ -49,18 +67,9 @@ function Sidebar({ sx: sxProp = {} }: SidebarProps) {
         </Header.Item>
       </Header>
       <SideNav>
-        <SideNav.Link href="#url">
-          <Text>Toplevel ObjectType 1</Text>
-        </SideNav.Link>
-        <SideNav.Link href="#url" selected>
-          <Text>Toplevel ObjectType 2</Text>
-        </SideNav.Link>
-        <SideNav.Link href="#url">
-          <Text>Toplevel ObjectType 3</Text>
-        </SideNav.Link>
-        <SideNav.Link href="#url">
-          <Text>Toplevel ObjectType 4</Text>
-        </SideNav.Link>
+        {children &&
+          Array.isArray(children) && // Redundant check, but good to have
+          children}
       </SideNav>
     </Box>
   );

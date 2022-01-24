@@ -20,8 +20,8 @@ export function Table() {
     []
   );
 
-  const columns = useMemo(
-    () => [
+  const columns = useMemo(() => {
+    return [
       {
         Header: 'Column 1',
         accessor: 'col1', // accessor is the "key" in the data
@@ -30,9 +30,8 @@ export function Table() {
         Header: 'Column 2',
         accessor: 'col2',
       },
-    ],
-    []
-  );
+    ];
+  }, []);
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({ columns, data });

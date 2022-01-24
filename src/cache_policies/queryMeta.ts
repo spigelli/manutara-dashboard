@@ -27,6 +27,12 @@ const categorizeQuery = (query: any): any => {
   return { kind: qKind, name, returnType };
 };
 
+type QueryDescriptor = {
+  name: String;
+  kind: String;
+  returnType: String;
+};
+export const queryDescriptionsVar = makeVar<QueryDescriptor[]>([]);
 export const queryMetaPolicy = function merge(
   // eslint-disable-next-line @typescript-eslint/default-param-last
   existing: any = [],
@@ -37,6 +43,7 @@ export const queryMetaPolicy = function merge(
     const QueryDescriptions = incoming.map((query) => {
       return categorizeQuery(query);
     });
+    queryDescriptionsVar(QueryDescriptions);
     options.cache.writeQuery({
       query: gql`
         query QueryDescriptions {

@@ -1,13 +1,15 @@
-import { BaseStyles, Box, Spinner, useTheme } from '@primer/react';
 import { gql, useQuery } from '@apollo/client';
+import { BaseStyles, Box, Spinner, useTheme } from '@primer/react';
+
 import { HeaderNav } from '../HeaderNav/HeaderNav';
-import MenuPane from '../MenuPane/MenuPane';
 import { PageNav } from '../PageNav/PageNav';
+import Sidebar, { SidebarItem } from '../Sidebar/Sidebar';
 import { Table } from '../Table/Table';
 import TableHeader from '../TableHeader/TableHeader';
+import { queryDescriptionsVar } from '../../cache_policies/queryMeta';
 
 export function App() {
-  const { data, loading, error } = useQuery(
+  useQuery(
     gql`
       query GetMeta {
         schema: __type(name: "Query") {
@@ -31,20 +33,15 @@ export function App() {
       }
     `
   );
-
-  // const { data: result } = useQuery(gql`
-  //  {
-  //    descriptors @client {
-  //      name
-  //    }
-  //  }
-  // `);
-  // console.log(result);
-
-  if (error) {
-    console.log(error);
+  const entityNames = Array<string>();
+  const data = queryDescriptionsVar();
+  if (data.length > 0) {
+    data.forEach((query: any) => {
+      if (query.kind === 'ENTITY' && query.name) {
+        entityNames.push(query.name);
+      }
+    });
   }
-  console.log(data);
 
   const { theme } = useTheme();
   return (
@@ -52,7 +49,7 @@ export function App() {
       <BaseStyles className="full-height">
         <HeaderNav />
         <TableHeader />
-        {loading ? (
+        {data.length === 0 ? (
           <Spinner />
         ) : (
           <>
@@ -72,12 +69,22 @@ export function App() {
               >
                 <Table />
               </Box>
-              <MenuPane
+              <Sidebar
+                title="Queryable Types"
                 sx={{
                   float: 'right',
                   width: '360px',
                 }}
-              />
+              >
+                {entityNames.map((entityName) => (
+                  <SidebarItem
+                    key={entityName}
+                    title={entityName}
+                    href={`/query/${entityName}`}
+                    selected={false}
+                  />
+                ))}
+              </Sidebar>
             </Box>
           </>
         )}

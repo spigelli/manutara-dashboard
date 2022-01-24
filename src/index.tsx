@@ -6,17 +6,15 @@ import {
   ApolloProvider,
   InMemoryCache,
   gql,
+  makeVar,
 } from '@apollo/client';
 import { StrictMode } from 'react';
 import { ThemeProvider } from '@primer/react';
 import { App } from './components';
-import { queryMetaPolicy } from './cache_policies/queryMeta';
-
-type QueryDescriptor = {
-  name: String;
-  kind: String;
-  returnType: String;
-};
+import {
+  queryMetaPolicy,
+  queryDescriptionsVar,
+} from './cache_policies/queryMeta';
 
 const cache = new InMemoryCache({
   addTypename: true,
@@ -34,7 +32,13 @@ const cache = new InMemoryCache({
       },
     },
     Query: {
-      fields: {},
+      fields: {
+        descriptions: {
+          read() {
+            return queryDescriptionsVar();
+          },
+        },
+      },
     },
   },
 });
