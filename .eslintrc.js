@@ -49,8 +49,8 @@ module.exports = {
         'jsx-a11y/click-events-have-key-events': 'off',
         'no-useless-escape': 'off',
         'react/no-unused-prop-types': 'off',
-        'comma-dangle': ["error", "never"],
-        "@typescript-eslint/comma-dangle": ["error", "only-multiline"],
+        'comma-dangle': ["off", "never"],
+        "@typescript-eslint/comma-dangle": ["off", "only-multiline"],
 
       },
     },

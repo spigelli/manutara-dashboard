@@ -1,6 +1,5 @@
-import { useQuery } from '@apollo/client';
 import { BaseStyles, Box, Spinner, useTheme } from '@primer/react';
-import { QUERY_INFO } from '../../graphql/queries/queryInfo';
+import { gql, useQuery } from '@apollo/client';
 import { HeaderNav } from '../HeaderNav/HeaderNav';
 import MenuPane from '../MenuPane/MenuPane';
 import { PageNav } from '../PageNav/PageNav';
@@ -8,10 +7,44 @@ import { Table } from '../Table/Table';
 import TableHeader from '../TableHeader/TableHeader';
 
 export function App() {
-  const { loading, error } = useQuery(QUERY_INFO);
+  const { data, loading, error } = useQuery(
+    gql`
+      query GetMeta {
+        schema: __type(name: "Query") {
+          queries: fields {
+            name
+            description
+            arguments: args {
+              name
+            }
+            returnType: type {
+              kind
+              name
+              ofType {
+                __typename
+                kind
+                name
+              }
+            }
+          }
+        }
+      }
+    `
+  );
+
+  // const { data: result } = useQuery(gql`
+  //  {
+  //    descriptors @client {
+  //      name
+  //    }
+  //  }
+  // `);
+  // console.log(result);
+
   if (error) {
     console.log(error);
   }
+  console.log(data);
 
   const { theme } = useTheme();
   return (
@@ -28,13 +61,13 @@ export function App() {
               sx={{
                 display: 'flex',
                 flexWrap: 'nowrap',
-                height: '100%'
+                height: '100%',
               }}
             >
               <Box
                 sx={{
                   backgroundColor: `${theme?.colors.canvas.default}`,
-                  width: '100%'
+                  width: '100%',
                 }}
               >
                 <Table />
@@ -42,7 +75,7 @@ export function App() {
               <MenuPane
                 sx={{
                   float: 'right',
-                  width: '360px'
+                  width: '360px',
                 }}
               />
             </Box>

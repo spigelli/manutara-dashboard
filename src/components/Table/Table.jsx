@@ -17,7 +17,7 @@ export function Table() {
         col2: 'you want',
       },
     ],
-    [],
+    []
   );
 
   const columns = useMemo(
@@ -31,16 +31,11 @@ export function Table() {
         accessor: 'col2',
       },
     ],
-    [],
+    []
   );
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable({ columns, data });
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+    useTable({ columns, data });
 
   return (
     <table {...getTableProps()} style={{ border: 'solid 1px blue' }}>

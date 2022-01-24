@@ -1,6 +1,4 @@
-import {
-  TabNav, Box, Text, StyledOcticon,
-} from '@primer/react';
+import { TabNav, Box, Text, StyledOcticon } from '@primer/react';
 import { TableIcon } from '@primer/octicons-react';
 
 export function PageNav() {

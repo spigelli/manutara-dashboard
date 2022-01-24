@@ -1,53 +1,49 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import ReactDOM from 'react-dom';
 import env from 'react-dotenv';
 import {
   ApolloClient,
   ApolloProvider,
   InMemoryCache,
+  gql,
 } from '@apollo/client';
 import { StrictMode } from 'react';
 import { ThemeProvider } from '@primer/react';
 import { App } from './components';
-import { clientSideSchema } from './graphql/clientSideSchema';
+import { queryMetaPolicy } from './cache_policies/queryMeta';
 
-export type __Type = {
-  kind: __TypeKind!
-  name: String
-  description: String
-
-  # OBJECT and INTERFACE only
-  fields(includeDeprecated: Boolean = false): [__Field!]
-
-  # OBJECT only
-  interfaces: [__Type!]
-
-  # INTERFACE and UNION only
-  possibleTypes: [__Type!]
-
-  # ENUM only
-  enumValues(includeDeprecated: Boolean = false): [__EnumValue!]
-
-  # INPUT_OBJECT only
-  inputFields: [__InputValue!]
-
-  # NON_NULL and LIST only
-  ofType: __Type
-}
+type QueryDescriptor = {
+  name: String;
+  kind: String;
+  returnType: String;
+};
 
 const cache = new InMemoryCache({
+  addTypename: true,
   typePolicies: {
-    __Schema: {
-      queryType: {
-        merge(existing = [], incoming: any[]) {
-          return [...existing, ...incoming];
+    __Type: {
+      fields: {
+        fields: {
+          // eslint-disable-next-line @typescript-eslint/default-param-last
+          merge(existing = [], incoming, options) {
+            queryMetaPolicy(existing, incoming, options);
+            return [...existing, ...incoming];
+          },
+          ...queryMetaPolicy,
         },
+      },
+    },
+    Query: {
+      fields: {},
+    },
+  },
 });
 
 const client = new ApolloClient({
   cache,
   uri: env.GQL_API_URL,
   connectToDevTools: true,
-  typeDefs: clientSideSchema,
+  queryDeduplication: true,
 });
 
 ReactDOM.render(
@@ -58,5 +54,5 @@ ReactDOM.render(
       </ThemeProvider>
     </ApolloProvider>
   </StrictMode>,
-  document.getElementById('root'),
+  document.getElementById('root')
 );
