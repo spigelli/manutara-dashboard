@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, ReactElement } from 'react';
+import { InputHTMLAttributes } from 'react';
 import { SxProp } from '@primer/react/lib-esm/sx';
 import { Box, Header, Heading, SideNav, Text, useTheme } from '@primer/react';
 // import styled from 'styled-components';
@@ -6,28 +6,34 @@ import { merge } from '@primer/react/lib/sx';
 import { ThreeBarsIcon, XIcon } from '@primer/octicons-react';
 import { getSidebarStyles, getSidebarHeaderStyles } from './styles';
 
-export type SidebarProps = {
-  title: string;
-  // Children are SidebarItem
-  children?: ReactElement<SidebarItemProps>[];
-} & InputHTMLAttributes<HTMLInputElement> &
-  SxProp;
-
 export type SidebarItemProps = {
   title: string;
-  href: string;
+  href?: string;
   selected?: boolean;
+  onClick?: () => void;
 };
 
-export function SidebarItem({ title, href, selected }: SidebarItemProps) {
+export function SidebarItem({
+  title,
+  href,
+  selected,
+  onClick,
+}: SidebarItemProps) {
   return (
-    <SideNav.Link href={href} selected={selected}>
+    <SideNav.Link onClick={onClick} selected={selected} href={href}>
       <Text>{title}</Text>
     </SideNav.Link>
   );
 }
 
 SidebarItem.displayName = 'SidebarItem';
+
+export type SidebarProps = {
+  title: string;
+  // Children are SidebarItem
+  children?: React.ReactNode[];
+} & InputHTMLAttributes<HTMLInputElement> &
+  SxProp;
 
 /**
  * An accessible, menu pane component

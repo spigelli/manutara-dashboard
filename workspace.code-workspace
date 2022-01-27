@@ -1,0 +1,14 @@
+{
+  //"eslint.rules.customizations": [
+    //{ "rule": "comma-dangle"severity": "info" },
+  //],
+	"folders": [
+		{
+			"name": "manutara-dashboard",
+			"path": "."
+		}
+	],
+	"settings": {
+		"workbench.colorTheme": "GitHub Dark Default"
+	}
+}
