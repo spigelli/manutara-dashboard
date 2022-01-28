@@ -22,6 +22,7 @@
     "importHelpers": true,
     "sourceMap": true,
     "noImplicitAny": true,
+    "strictNullChecks": true,
   },
   "include": [
     "src"

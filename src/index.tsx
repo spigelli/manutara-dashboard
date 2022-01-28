@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import {
+  ApolloClient,
+  ApolloProvider,
+  InMemoryCache,
+  gql,
+} from '@apollo/client';
 import { ThemeProvider } from '@primer/react';
 import { FieldNode, Kind, SelectionSetNode } from 'graphql';
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
 
-import {
-  queryDescriptionsVar,
-  queryMetaPolicy,
-} from './cache_policies/queryMeta';
 import { App } from './components';
 
 type OnFieldOptions = {
@@ -61,53 +62,8 @@ export function onField({ fieldName, selectionSet, read }: OnFieldOptions) {}
 // todo implement
 
 const cache = new InMemoryCache({
-  addTypename: true,
-  typePolicies: {
-    // __Type: {
-    //   fields: {
-    //     fields: {
-    //       // eslint-disable-next-line @typescript-eslint/default-param-last
-    //       merge(existing = [], incoming, options) {
-    //         queryMetaPolicy(existing, incoming, options);
-    //         return [...existing, ...incoming];
-    //       },
-    //       ...queryMetaPolicy,
-    //     },
-    //   },
-    // },
-    Query: {
-      fields: {
-        GetDescriptions: {
-          read(existing, options) {
-            return queryDescriptionsVar();
-          },
-        },
-      },
-    },
-    GetDescriptions: {
-      fields: {
-        name: {
-          read() {
-            console.log('GetDescriptions name read');
-            return 'name';
-          },
-        },
-        kind: {
-          read() {
-            console.log('GetDescriptions kind read');
-            return 'kind';
-          },
-        },
-        returnType: {
-          read() {
-            console.log('GetDescriptions returnType read');
-
-            return 'returnType';
-          },
-        },
-      },
-    },
-  },
+  addTypename: false,
+  typePolicies: {},
 });
 
 const client = new ApolloClient({
