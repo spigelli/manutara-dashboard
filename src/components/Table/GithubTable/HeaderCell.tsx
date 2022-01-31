@@ -2,7 +2,6 @@ import { Box, useTheme } from '@primer/react';
 
 export function HeaderCell({ children }: { children: React.ReactNode }) {
   const { theme } = useTheme();
-  console.log(theme?.colors.border.default);
   return (
     <Box
       as="th"

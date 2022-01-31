@@ -1,6 +1,12 @@
 import { Box } from '@primer/react';
 
-export function Cell({ children }: { children: React.ReactNode }) {
+export function Cell({
+  children,
+  sx,
+}: {
+  children: React.ReactNode;
+  sx?: any;
+}) {
   return (
     <Box
       as="td"
@@ -11,6 +17,8 @@ export function Cell({ children }: { children: React.ReactNode }) {
         borderBottom: '1px solid',
         borderLeft: '1px solid',
         borderColor: 'border.muted',
+        whiteSpace: 'nowrap',
+        ...sx,
       }}
     >
       <Box

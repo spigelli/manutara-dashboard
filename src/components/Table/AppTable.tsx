@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ApolloError, gql, useQuery, useReactiveVar } from '@apollo/client';
+import { Truncate, Box } from '@primer/react';
 import { withDisplayQueryName } from '../withDisplayQueryName/withDisplayQueryName';
 import { selectedModelNameVar } from '../../hooks/selectedModelName';
 import { TBody } from './GithubTable/TBody';
@@ -7,6 +8,10 @@ import { Row } from './GithubTable/Row';
 import { Cell } from './GithubTable/Cell';
 import { HeaderRow } from './GithubTable/HeaderRow';
 import { HeaderCell } from './GithubTable/HeaderCell';
+import { EllipsisCell } from './GithubTable/EllipsisCell';
+import { capitalize } from '../../helpers/common/capitalize';
+import { useFieldsForModel } from '../../hooks/fieldsForModel';
+import { RowActionMenu } from './GithubTable/RowActionMenu';
 
 export interface AppTableProps {
   title: string;
@@ -27,43 +32,16 @@ function Table({ title, ...displayQuery }: AppTableProps) {
    */
   const selectedModelName = useReactiveVar(selectedModelNameVar);
 
-  /**
-   * Get all fields existing on the selected model
-   */
+  const skipFields =
+    displayQuery.queryNameLoading ||
+    displayQuery.queryNameError !== undefined ||
+    selectedModelName === undefined;
+
   const {
-    data: fieldsData,
+    data: fields,
     loading: fieldsLoading,
     error: fieldsError,
-  } = useQuery(
-    gql`
-      query GetFields($modelName: String!) {
-        __type(name: $modelName) {
-          fields {
-            name
-          }
-        }
-      }
-    `,
-    {
-      variables: {
-        modelName: selectedModelName,
-      },
-      skip:
-        displayQuery.queryNameLoading ||
-        displayQuery.queryNameError !== undefined ||
-        selectedModelName === undefined,
-    }
-  );
-
-  // Destructure the fields from the query
-  let {
-    __type: { fields },
-  } = fieldsData ?? { __type: { fields: undefined } };
-  fields = fields
-    ? fields.map((field: { name: string }) => {
-        return field.name;
-      })
-    : undefined;
+  } = useFieldsForModel(selectedModelName, skipFields);
 
   /**
    * With the fields, we can now run the query for all data on the selected model
@@ -72,18 +50,19 @@ function Table({ title, ...displayQuery }: AppTableProps) {
     gql`
       query GetTableData {
         ${displayQuery.queryName} {
-          ${fields?.join('\n')}
+          ${fields?.join('\n') || 'name'}
         }
       }
     `,
     {
       skip:
+        selectedModelName === undefined ||
         displayQuery.queryNameLoading ||
         displayQuery.queryNameError !== undefined ||
         fieldsLoading ||
         fieldsError !== undefined ||
         fields === undefined ||
-        selectedModelName === undefined,
+        fields.length === 0,
     }
   );
 
@@ -91,17 +70,33 @@ function Table({ title, ...displayQuery }: AppTableProps) {
     <table style={{ width: '1740px' }}>
       <thead>
         <HeaderRow>
+          <HeaderCell key="ordinal">#</HeaderCell>
           {fields?.map((field: string) => (
-            <HeaderCell key={field}>{field}</HeaderCell>
+            <HeaderCell key={field}>{capitalize(field)}</HeaderCell>
           ))}
         </HeaderRow>
       </thead>
       <TBody>
-        {data?.homes?.map((row: Record<string, any>) => (
+        {data?.homes?.map((row: Record<string, any>, index: number) => (
           <Row key={row.id}>
-            {Object.keys(row).map((field: string) => (
-              <Cell key={`${row.id}-${field}`}>{row[field]}</Cell>
-            ))}
+            <Cell
+              key="ordinal"
+              sx={{
+                pl: '28px',
+                width: '50px',
+              }}
+            >
+              <RowActionMenu id={row.id} />
+              {index + 1}
+            </Cell>
+            <EllipsisCell width={75} keyName={`${row.id}`}>
+              {row.id}
+            </EllipsisCell>
+            {Object.keys(row)
+              .filter((key) => key !== 'id')
+              .map((field: string) => (
+                <Cell key={`${row.id}-${field}`}>{row[field]}</Cell>
+              ))}
           </Row>
         ))}
       </TBody>
