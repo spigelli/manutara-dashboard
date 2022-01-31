@@ -1,16 +1,18 @@
+import { useReactiveVar } from '@apollo/client';
 import Sidebar, { SidebarItem } from './Sidebar';
+import { selectedModelNameVar } from '../../hooks/selectedModelName';
 
 export interface AppSidebarProps {
-  selectedEntityName: string;
-  selectEntity: (name: string) => void;
   entityNames: string[];
 }
 
 export function AppSidebar({
-  selectedEntityName,
-  selectEntity,
   entityNames,
 }: AppSidebarProps): React.ReactElement {
+  const selectedModelName = useReactiveVar(selectedModelNameVar);
+  if (!selectedModelName) {
+    selectedModelNameVar(entityNames[0]);
+  }
   return (
     <Sidebar
       title="Queryable Types"
@@ -23,9 +25,9 @@ export function AppSidebar({
         <SidebarItem
           key={entityName}
           title={entityName}
-          selected={selectedEntityName === entityName}
+          selected={selectedModelName === entityName}
           onClick={() => {
-            selectEntity(entityName);
+            selectedModelNameVar(entityName);
           }}
         />
       ))}
